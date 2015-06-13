@@ -17,7 +17,7 @@ import org.json.JSONObject;
  */
 public class UserProxy {
     public void validateUser(final Context context, final String username, final String password, final RequestListener<UserEntity> listener) throws JSONException {
-        final String url = "http://localhost:8080/_ah/api/backtoback/v1/users/login";
+        final String url = "https://backtoback-01.appspot.com/_ah/api/backtoback/v1/users/login";
 
         JSONObject userPassword = new JSONObject();
         userPassword.put("username", username);
@@ -27,12 +27,17 @@ public class UserProxy {
         JsonObjectRequest userRequest = new JsonObjectRequest(url, userPassword, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                UserEntity user;
 
-                System.out.print(response.toString());
 
+                try {
+                    user = UserEntity.of(response.getLong("id"), username);
+                }
+                catch (Exception e) {
+                    user = UserEntity.of((long) -1, "");
+                }
 
-                //UserEntity user = UserEntity.of(response.getLong("id"), username);
-                //listener.onComplete(user);
+                listener.onComplete(user);
             }
         }, new Response.ErrorListener() {
             @Override
