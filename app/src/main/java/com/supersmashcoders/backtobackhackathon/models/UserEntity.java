@@ -17,11 +17,6 @@ public class UserEntity implements Serializable {
         this.username = username;
     }
 
-    public UserEntity() {
-        this.id = 1L;
-        this.username = "username";
-    }
-
     public static UserEntity of(Long id, String username) {
         return new UserEntity(id, username);
     }

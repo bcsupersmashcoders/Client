@@ -38,17 +38,6 @@ public class EventModel implements Serializable {
         this.attendants = attendants;
     }
 
-    public EventModel() {
-        this.id = 1L;
-        this.name = "Name";
-        this.description = "Description";
-        this.startDate = new Date();
-        this.endDate = new Date();
-        this.owner = new UserEntity();
-        this.tag = Tag.BIKE;
-        this.attendants = new ArrayList<>();
-    }
-
     public static EventModel of(Long id, String name, String description, Date startDate, Date endDate,
                                 UserEntity owner, Tag tag, List<UserEntity> attendants) {
         return new EventModel(id, name, description, startDate, endDate, owner, tag, attendants);
