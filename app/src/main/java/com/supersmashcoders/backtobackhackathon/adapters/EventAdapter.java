@@ -32,7 +32,7 @@ public class EventAdapter extends ArrayAdapter<EventModel>{
         EventModel event = getItem(position);
         itemName.setText(String.valueOf(event.getName()));
         itemDescription.setText(event.getDescription());
-        itemDate.setText(DateConverter.toDisplayString(event.getStartDate()));
+        itemDate.setText(DateConverter.toString(event.getStartDate(), DateConverter.DateFormat.DATE_FORMAT));
 
         return convertView;
     }

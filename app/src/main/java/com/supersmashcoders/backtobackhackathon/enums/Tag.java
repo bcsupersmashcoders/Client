@@ -39,4 +39,24 @@ public enum Tag {
 
         return names;
     }
+
+    public static Tag fromId(String id) {
+        Tag tag = null;
+        for (Tag currentTag: values()) {
+            if (currentTag.getId().equals(id)) {
+                return currentTag;
+            }
+        }
+        throw new IllegalArgumentException("Invalid tag id provided: " + id);
+    }
+
+    public static Tag fromDisplayName(String name) {
+        Tag tag = null;
+        for (Tag currentTag: values()) {
+            if (currentTag.getDisplayName().equals(name)) {
+                return currentTag;
+            }
+        }
+        throw new IllegalArgumentException("Invalid tag name provided: " + name);
+    }
 }

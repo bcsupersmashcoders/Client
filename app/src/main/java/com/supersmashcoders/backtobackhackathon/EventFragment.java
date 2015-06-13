@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.MapFragment;
 import com.supersmashcoders.backtobackhackathon.converters.DateConverter;
 import com.supersmashcoders.backtobackhackathon.models.EventModel;
 import com.supersmashcoders.backtobackhackathon.proxy.EventProxy;
@@ -59,6 +61,19 @@ public class EventFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mRootView = inflater.inflate(R.layout.fragment_event, container, false);
+
+        MapFragment mMapFragment = MapFragment.newInstance();
+        getChildFragmentManager().beginTransaction()
+                .add(R.id.map_container, mMapFragment)
+                .commit();
+
+        Button attendButton = (Button) mRootView.findViewById(R.id.button_attend);
+        attendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         return mRootView;
     }
 
@@ -66,7 +81,7 @@ public class EventFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        mEventProxy.getEvent(getActivity(), mEventId, new RequestListener<EventModel>() {
+        mEventProxy.get(getActivity(), mEventId, new RequestListener<EventModel>() {
             @Override
             public void onComplete(EventModel object) {
                 TextView name = (TextView) mRootView.findViewById(R.id.name);
@@ -77,8 +92,8 @@ public class EventFragment extends Fragment {
 
                 name.setText(object.getName());
                 description.setText(object.getDescription());
-                startDate.setText(DateConverter.toDisplayString(object.getStartDate()));
-                endDate.setText(DateConverter.toDisplayString(object.getEndDate()));
+                startDate.setText(DateConverter.toString(object.getStartDate(), DateConverter.DateFormat.DATE_FORMAT));
+                endDate.setText(DateConverter.toString(object.getEndDate(), DateConverter.DateFormat.DATE_FORMAT));
                 tags.setText(object.getTag().getDisplayName());
             }
 

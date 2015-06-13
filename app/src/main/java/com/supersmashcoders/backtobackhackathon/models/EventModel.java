@@ -1,6 +1,15 @@
 package com.supersmashcoders.backtobackhackathon.models;
 
+import android.util.Log;
+
+import com.supersmashcoders.backtobackhackathon.converters.Converters;
+import com.supersmashcoders.backtobackhackathon.converters.DateConverter;
+import com.supersmashcoders.backtobackhackathon.converters.JsonArrayConverter;
 import com.supersmashcoders.backtobackhackathon.enums.Tag;
+import com.supersmashcoders.backtobackhackathon.util.JSONUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -29,20 +38,31 @@ public class EventModel implements Serializable {
         this.attendants = attendants;
     }
 
-    public EventModel() {
-        this.id = 1L;
-        this.name = "Name";
-        this.description = "Description";
-        this.startDate = new Date();
-        this.endDate = new Date();
-        this.owner = UserEntity.of(1L, "user");
-        this.tag = Tag.BIKE;
-        this.attendants = new ArrayList<>();
-    }
-
     public static EventModel of(Long id, String name, String description, Date startDate, Date endDate,
                                 UserEntity owner, Tag tag, List<UserEntity> attendants) {
         return new EventModel(id, name, description, startDate, endDate, owner, tag, attendants);
+    }
+
+    public static EventModel of(String name, String description, Date startDate, Date endDate,
+                                Tag tag) {
+        return new EventModel(0L, name, description, startDate, endDate, null, tag, new ArrayList<UserEntity>());
+    }
+
+    public static EventModel of(JSONObject jsonEvent) {
+        try {
+            Long id = jsonEvent.getLong("id");
+            String name = jsonEvent.getString("name");
+            String description = jsonEvent.getString("description");
+            Date startDate = DateConverter.toDate(jsonEvent.getString("startDate"), DateConverter.DateFormat.DATE_FORMAT);
+            Date endDate = DateConverter.toDate(jsonEvent.getString("endDate"), DateConverter.DateFormat.DATE_FORMAT);
+            UserEntity owner = UserEntity.of(jsonEvent.getJSONObject("owner"));
+            Tag tag = Tag.fromId(jsonEvent.getString("tag"));
+            List<UserEntity> attendants = JsonArrayConverter.toList(JSONUtil.getArrayOrEmpty(jsonEvent, "attendants"), new Converters.UserConverter());
+            return new EventModel(id, name, description, startDate, endDate, owner, tag, attendants);
+        } catch(JSONException e) {
+            Log.e("JSON PARSE", "ERROR PARSING " + jsonEvent.toString());
+            return null;
+        }
     }
 
     public Long getId() {
@@ -107,5 +127,33 @@ public class EventModel implements Serializable {
 
     public void setAttendants(List<UserEntity> attendants) {
         this.attendants = attendants;
+    }
+
+    /*
+    {
+  "name": "Card games on Battle City",
+  "endDate": "2015-04-15T20:20:50.520Z",
+  "description": "Playing card games on a city",
+  "startDate": "2015-04-12T20:20:50.520Z",
+  "owner":
+  {
+    "username": "username"
+  },
+  "tag": "bcsCat7000003"
+}
+     */
+    public JSONObject asJSON() {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("name", getName());
+            object.put("description", getDescription());
+            object.put("startDate", DateConverter.toString(getStartDate(), DateConverter.DateFormat.ISO_FORMAT));
+            object.put("endDate", DateConverter.toString(getEndDate(), DateConverter.DateFormat.ISO_FORMAT));
+            object.put("owner", getOwner().asJSON());
+            object.put("tag", getTag().getId());
+        } catch (JSONException e) {
+            Log.e("JSON PARSE", "Error converting object to JSON");
+        }
+        return object;
     }
 }

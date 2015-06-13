@@ -68,4 +68,11 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"/>
+
+    <Button
+        android:id="@+id/button_attend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="Attend Event"/>
 </LinearLayout>

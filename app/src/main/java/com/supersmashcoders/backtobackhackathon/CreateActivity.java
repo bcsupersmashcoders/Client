@@ -5,37 +5,75 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
+import com.supersmashcoders.backtobackhackathon.converters.DateConverter;
 import com.supersmashcoders.backtobackhackathon.enums.Tag;
+import com.supersmashcoders.backtobackhackathon.models.EventModel;
+import com.supersmashcoders.backtobackhackathon.proxy.EventProxy;
+import com.supersmashcoders.backtobackhackathon.proxy.RequestListener;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
 
 
 public class CreateActivity extends ActionBarActivity {
 
-    Calendar myCalendar = Calendar.getInstance();
+    private EventProxy mEventProxy;
+    private Calendar myCalendar;
+
+    private EditText mName;
+    private EditText mDescription;
+    private EditText mStartDate;
+    private EditText mEndDate;
+    private String mSelectedTag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
 
-        final EditText startDate = (EditText) findViewById(R.id.input_start_date);
-        startDate.setOnClickListener(getDatePickerListener(startDate));
+        mEventProxy = new EventProxy();
+        myCalendar = Calendar.getInstance();
 
-        EditText endDate = (EditText) findViewById(R.id.input_end_date);
-        endDate.setOnClickListener(getDatePickerListener(endDate));
+        mName = (EditText) findViewById(R.id.input_title);
+
+        mDescription = (EditText) findViewById(R.id.input_description);
+
+        mStartDate = (EditText) findViewById(R.id.input_start_date);
+        mStartDate.setOnClickListener(getDatePickerListener(mStartDate));
+
+        mEndDate = (EditText) findViewById(R.id.input_end_date);
+        mEndDate.setOnClickListener(getDatePickerListener(mEndDate));
 
         Spinner tagSpinner = (Spinner) findViewById(R.id.input_tag);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Tag.displayNames());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         tagSpinner.setAdapter(adapter);
+        tagSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mSelectedTag = parent.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        Button submitButton = (Button) findViewById(R.id.button_submit);
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createEvent();
+            }
+        });
     }
 
     @Override
@@ -75,9 +113,29 @@ public class CreateActivity extends ActionBarActivity {
         }
 
         private void updateLabel() {
-            String myFormat = "MM/dd/yy"; //In which you need put here
-            SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-            editTextDisplay.setText(sdf.format(calendar.getTime()));
+            editTextDisplay.setText(DateConverter.toString(calendar.getTime(), DateConverter.DateFormat.DATE_FORMAT));
         }
     };
+
+    private void createEvent() {
+        EventModel model = EventModel.of(
+                mName.getText().toString(),
+                mDescription.getText().toString(),
+                DateConverter.toDate(mStartDate.getText().toString(), DateConverter.DateFormat.DATE_FORMAT),
+                DateConverter.toDate(mEndDate.getText().toString(), DateConverter.DateFormat.DATE_FORMAT),
+                Tag.fromDisplayName(mSelectedTag)
+        );
+
+        mEventProxy.create(this, model, new RequestListener<EventModel>() {
+            @Override
+            public void onComplete(EventModel object) {
+                Toast.makeText(CreateActivity.this, "Created", Toast.LENGTH_SHORT);
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
+    }
 }
