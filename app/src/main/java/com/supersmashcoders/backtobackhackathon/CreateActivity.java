@@ -1,6 +1,8 @@
 package com.supersmashcoders.backtobackhackathon;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -11,7 +13,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.supersmashcoders.backtobackhackathon.converters.DateConverter;
 import com.supersmashcoders.backtobackhackathon.enums.Tag;
@@ -23,6 +24,7 @@ import java.util.Calendar;
 
 
 public class CreateActivity extends ActionBarActivity {
+    public static final int CREATE_ACTIVITY_ID = 1;
 
     private EventProxy mEventProxy;
     private Calendar myCalendar;
@@ -129,7 +131,17 @@ public class CreateActivity extends ActionBarActivity {
         mEventProxy.create(this, model, new RequestListener<EventModel>() {
             @Override
             public void onComplete(EventModel object) {
-                Toast.makeText(CreateActivity.this, "Created", Toast.LENGTH_SHORT);
+                AlertDialog alertDialog = new AlertDialog.Builder(CreateActivity.this).create();
+                alertDialog.setTitle("Created!");
+                alertDialog.setMessage("Created");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                finish();
+                            }
+                        });
+                alertDialog.show();
             }
 
             @Override

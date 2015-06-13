@@ -30,7 +30,7 @@ public class EventAdapter extends ArrayAdapter<EventModel>{
         TextView itemDate = (TextView) convertView.findViewById(R.id.item_start_date);
 
         EventModel event = getItem(position);
-        itemName.setText(String.valueOf(event.getName()));
+        itemName.setText(event.getName());
         itemDescription.setText(event.getDescription());
         itemDate.setText(DateConverter.toString(event.getStartDate(), DateConverter.DateFormat.DATE_FORMAT));
 
