@@ -1,6 +1,9 @@
 package com.supersmashcoders.backtobackhackathon.models;
 
+import com.supersmashcoders.backtobackhackathon.enums.Tag;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +27,17 @@ public class EventModel implements Serializable {
         this.owner = owner;
         this.tag = tag;
         this.attendants = attendants;
+    }
+
+    public EventModel() {
+        this.id = 1L;
+        this.name = "Name";
+        this.description = "Description";
+        this.startDate = new Date();
+        this.endDate = new Date();
+        this.owner = UserEntity.of(1L, "user");
+        this.tag = Tag.BIKE.getId();
+        this.attendants = new ArrayList<>();
     }
 
     public static EventModel of(Long id, String name, String description, Date startDate, Date endDate,

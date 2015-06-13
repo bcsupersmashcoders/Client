@@ -1,26 +1,18 @@
 package com.supersmashcoders.backtobackhackathon.enums;
 
 
-import com.supersmashcoders.backtobackhackathon.R;
-
 public enum EventRequestType {
-    MY_SUBSCRIBED_EVENTS ("Subscribed", R.string.title_my_subscribed_events),
-    MY_CREATED_EVENTS ("Created", R.string.title_my_created_events),
-    ALL_EVENTS ("All", R.string.title_all_events);
+    MY_SUBSCRIBED_EVENTS ("Subscribed"),
+    MY_CREATED_EVENTS ("Created"),
+    ALL_EVENTS ("All");
 
     private String requestName;
-    private int titleResourceId;
 
-    EventRequestType(String requestName, int titleResourceId) {
+    EventRequestType(String requestName) {
         this.requestName = requestName;
-        this.titleResourceId = titleResourceId;
     }
 
     public String getRequestName() {
         return requestName;
-    }
-
-    public int getTitleResourceId() {
-        return titleResourceId;
     }
 }
