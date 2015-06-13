@@ -140,7 +140,7 @@ public class EventProxy {
     }
 
     public void removeAttendance(final Context context, Long id, final RequestListener<EventModel> listener) {
-        final String url = String.format("https://backtoback-01.appspot.com/_ah/api/backtoback/v1/events/attendants?eventId=%1$s&userId=%2$s",
+        final String url = String.format("https://backtoback-01.appspot.com/_ah/api/backtoback/v1/events/attendants?eventId=%1$s&username=%2$s",
                 id,
                 UserHandler.getUser());
 
