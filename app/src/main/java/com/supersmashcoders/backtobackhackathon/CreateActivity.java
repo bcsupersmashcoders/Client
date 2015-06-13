@@ -1,13 +1,17 @@
 package com.supersmashcoders.backtobackhackathon;
 
 import android.app.DatePickerDialog;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
+
+import com.supersmashcoders.backtobackhackathon.enums.Tag;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -28,6 +32,11 @@ public class CreateActivity extends ActionBarActivity {
 
         EditText endDate = (EditText) findViewById(R.id.input_end_date);
         endDate.setOnClickListener(getDatePickerListener(endDate));
+
+        Spinner tagSpinner = (Spinner) findViewById(R.id.input_tag);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Tag.displayNames());
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        tagSpinner.setAdapter(adapter);
     }
 
     @Override
