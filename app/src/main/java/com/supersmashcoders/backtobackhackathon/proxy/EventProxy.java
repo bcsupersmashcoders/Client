@@ -39,4 +39,26 @@ public class EventProxy {
         // Add the request to the RequestQueue.
         ApplicationRequestQueue.INSTANCE.addToRequestQueue(context, eventsRequest);
     }
+
+    public void getEvent(final Context context, long id, final RequestListener<EventModel> listener) {
+        final String url = "http://jsonplaceholder.typicode.com/posts/1";
+
+        // Request a string response from the provided URL.
+        JsonObjectRequest eventRequest = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                EventModel eventModel = new EventModel();
+                listener.onComplete(eventModel);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                listener.onError();
+                Log.e("API FAIL", "Error calling API " + url);
+            }
+        });
+
+        // Add the request to the RequestQueue.
+        ApplicationRequestQueue.INSTANCE.addToRequestQueue(context, eventRequest);
+    }
 }

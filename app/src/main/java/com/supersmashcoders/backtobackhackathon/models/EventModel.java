@@ -14,11 +14,11 @@ public class EventModel implements Serializable {
     private Date startDate;
     private Date endDate;
     private UserEntity owner;
-    private String tag;
+    private Tag tag;
     private List<UserEntity> attendants;
 
     private EventModel(Long id, String name, String description, Date startDate, Date endDate,
-                       UserEntity owner, String tag, List<UserEntity> attendants) {
+                       UserEntity owner, Tag tag, List<UserEntity> attendants) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -36,12 +36,12 @@ public class EventModel implements Serializable {
         this.startDate = new Date();
         this.endDate = new Date();
         this.owner = UserEntity.of(1L, "user");
-        this.tag = Tag.BIKE.getId();
+        this.tag = Tag.BIKE;
         this.attendants = new ArrayList<>();
     }
 
     public static EventModel of(Long id, String name, String description, Date startDate, Date endDate,
-                                UserEntity owner, String tag, List<UserEntity> attendants) {
+                                UserEntity owner, Tag tag, List<UserEntity> attendants) {
         return new EventModel(id, name, description, startDate, endDate, owner, tag, attendants);
     }
 
@@ -93,11 +93,11 @@ public class EventModel implements Serializable {
         this.owner = owner;
     }
 
-    public String getTag() {
+    public Tag getTag() {
         return tag;
     }
 
-    public void setTag(String tag) {
+    public void setTag(Tag tag) {
         this.tag = tag;
     }
 
