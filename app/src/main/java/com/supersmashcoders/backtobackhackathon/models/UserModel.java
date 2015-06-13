@@ -7,25 +7,25 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 
-public class UserEntity implements Serializable {
+public class UserModel implements Serializable {
 
     private Long id;
     private String username;
 
-    private UserEntity(Long id, String username) {
+    private UserModel(Long id, String username) {
         this.id = id;
         this.username = username;
     }
 
-    public static UserEntity of(Long id, String username) {
-        return new UserEntity(id, username);
+    public static UserModel of(Long id, String username) {
+        return new UserModel(id, username);
     }
 
-    public static UserEntity of(JSONObject jsonUser) {
+    public static UserModel of(JSONObject jsonUser) {
         try {
             Long id = jsonUser.getLong("id");
             String username = jsonUser.getString("username");
-            return new UserEntity(id, username);
+            return new UserModel(id, username);
         } catch (JSONException e) {
             Log.e("JSON PARSE", "ERROR PARSING " + jsonUser.toString());
             return null;

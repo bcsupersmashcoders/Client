@@ -8,10 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.MapFragment;
 import com.supersmashcoders.backtobackhackathon.converters.DateConverter;
+import com.supersmashcoders.backtobackhackathon.global.UserHandler;
 import com.supersmashcoders.backtobackhackathon.models.EventModel;
+import com.supersmashcoders.backtobackhackathon.models.UserModel;
 import com.supersmashcoders.backtobackhackathon.proxy.EventProxy;
 import com.supersmashcoders.backtobackhackathon.proxy.RequestListener;
 
@@ -25,8 +28,11 @@ public class EventFragment extends Fragment {
     private static final String EVENT_ID = "com.supersmashcoders.EVENT_ID";
 
     private View mRootView;
+    private Button mButton;
     private long mEventId;
     private EventProxy mEventProxy;
+    private boolean isAttending;
+    private EventModel mEvent;
 
 
     /**
@@ -67,14 +73,22 @@ public class EventFragment extends Fragment {
                 .add(R.id.map_container, mMapFragment)
                 .commit();
 
-        Button attendButton = (Button) mRootView.findViewById(R.id.button_attend);
-        attendButton.setOnClickListener(new View.OnClickListener() {
+        mButton = (Button) mRootView.findViewById(R.id.button_attend);
+        mButton .setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                attendEvent();
             }
         });
         return mRootView;
+    }
+
+    public void checkIfAttending() {
+        for (UserModel user : mEvent.getAttendants()) {
+            if (user.getUsername().equals(UserHandler.getUser())) {
+                isAttending = true;
+            }
+        }
     }
 
     @Override
@@ -83,23 +97,61 @@ public class EventFragment extends Fragment {
 
         mEventProxy.get(getActivity(), mEventId, new RequestListener<EventModel>() {
             @Override
-            public void onComplete(EventModel object) {
+            public void onComplete(EventModel event) {
                 TextView name = (TextView) mRootView.findViewById(R.id.name);
                 TextView description = (TextView) mRootView.findViewById(R.id.description);
                 TextView startDate = (TextView) mRootView.findViewById(R.id.start_date);
                 TextView endDate = (TextView) mRootView.findViewById(R.id.end_date);
                 TextView tags = (TextView) mRootView.findViewById(R.id.tag);
 
-                name.setText(object.getName());
-                description.setText(object.getDescription());
-                startDate.setText(DateConverter.toString(object.getStartDate(), DateConverter.DateFormat.DATE_FORMAT));
-                endDate.setText(DateConverter.toString(object.getEndDate(), DateConverter.DateFormat.DATE_FORMAT));
-                tags.setText(object.getTag().getDisplayName());
+                mEvent = event;
+                name.setText(mEvent.getName());
+                description.setText(mEvent.getDescription());
+                startDate.setText(DateConverter.toString(mEvent.getStartDate(), DateConverter.DateFormat.DATE_FORMAT));
+                endDate.setText(DateConverter.toString(mEvent.getEndDate(), DateConverter.DateFormat.DATE_FORMAT));
+                tags.setText(mEvent.getTag().getDisplayName());
             }
 
             @Override
             public void onError() {
             }
         });
+    }
+
+    public void attendEvent() {
+        if(isAttending) {
+            mEventProxy.removeAttendance(getActivity(), mEventId, new RequestListener<EventModel>() {
+                @Override
+                public void onComplete(EventModel object) {
+                    Toast.makeText(getActivity(), "Attending Event!", Toast.LENGTH_SHORT);
+                }
+
+                @Override
+                public void onError() {
+                }
+            });
+            isAttending = false;
+        } else {
+            mEventProxy.attend(getActivity(), mEventId, new RequestListener<EventModel>() {
+                @Override
+                public void onComplete(EventModel object) {
+                    Toast.makeText(getActivity(), "Event Abandoned!", Toast.LENGTH_SHORT);
+                }
+
+                @Override
+                public void onError() {
+                }
+            });
+            isAttending = true;
+        }
+        updateButton();
+    }
+
+    private void updateButton() {
+        if (isAttending) {
+            mButton.setText("Stop Attending");
+        } else {
+            mButton.setText("Attend");
+        }
     }
 }

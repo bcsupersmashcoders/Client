@@ -36,7 +36,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.supersmashcoders.backtobackhackathon.models.UserEntity;
+import com.supersmashcoders.backtobackhackathon.models.UserModel;
 import com.supersmashcoders.backtobackhackathon.proxy.ImageProxy;
 import com.supersmashcoders.backtobackhackathon.proxy.RequestListener;
 import com.supersmashcoders.backtobackhackathon.proxy.UserProxy;
@@ -284,13 +284,13 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
             UserProxy userProxy = new UserProxy();
             Boolean result = false;
-            final UserEntity user = UserEntity.of((long) 0, null);
+            final UserModel user = UserModel.of((long) 0, null);
 
             try {
 
-                userProxy.validateUser(null, mEmail, mPassword, new RequestListener<UserEntity>() {
+                userProxy.validateUser(null, mEmail, mPassword, new RequestListener<UserModel>() {
                     @Override
-                    public void onComplete(UserEntity object) {
+                    public void onComplete(UserModel object) {
                         //TODO: save user here to persist session
                         user.setId(object.getId());
                         user.setUsername(object.getUsername());

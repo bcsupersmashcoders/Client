@@ -86,7 +86,7 @@ public class EventsFragment extends Fragment implements AbsListView.OnItemClickL
                 // TODO: Temporary adapter while content is loaded. Replace with spinner
                 mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
                         android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS);
-                mEventProxy.getAll(getActivity(), new RequestListener<List<EventModel>>() {
+                mEventProxy.getEvents(getActivity(), mEventRequestType, new RequestListener<List<EventModel>>() {
                     @Override
                     public void onComplete(List<EventModel> eventsList) {
                         mEvents = eventsList;

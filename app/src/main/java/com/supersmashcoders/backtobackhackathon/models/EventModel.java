@@ -22,12 +22,12 @@ public class EventModel implements Serializable {
     private String description;
     private Date startDate;
     private Date endDate;
-    private UserEntity owner;
+    private String owner;
     private Tag tag;
-    private List<UserEntity> attendants;
+    private List<UserModel> attendants;
 
     private EventModel(Long id, String name, String description, Date startDate, Date endDate,
-                       UserEntity owner, Tag tag, List<UserEntity> attendants) {
+                       String owner, Tag tag, List<UserModel> attendants) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -39,13 +39,13 @@ public class EventModel implements Serializable {
     }
 
     public static EventModel of(Long id, String name, String description, Date startDate, Date endDate,
-                                UserEntity owner, Tag tag, List<UserEntity> attendants) {
+                                String owner, Tag tag, List<UserModel> attendants) {
         return new EventModel(id, name, description, startDate, endDate, owner, tag, attendants);
     }
 
     public static EventModel of(String name, String description, Date startDate, Date endDate,
                                 Tag tag) {
-        return new EventModel(0L, name, description, startDate, endDate, null, tag, new ArrayList<UserEntity>());
+        return new EventModel(0L, name, description, startDate, endDate, null, tag, new ArrayList<UserModel>());
     }
 
     public static EventModel of(JSONObject jsonEvent) {
@@ -55,9 +55,9 @@ public class EventModel implements Serializable {
             String description = jsonEvent.getString("description");
             Date startDate = DateConverter.toDate(jsonEvent.getString("startDate"), DateConverter.DateFormat.DATE_FORMAT);
             Date endDate = DateConverter.toDate(jsonEvent.getString("endDate"), DateConverter.DateFormat.DATE_FORMAT);
-            UserEntity owner = UserEntity.of(jsonEvent.getJSONObject("owner"));
+            String owner = jsonEvent.getString("owner");
             Tag tag = Tag.fromId(jsonEvent.getString("tag"));
-            List<UserEntity> attendants = JsonArrayConverter.toList(JSONUtil.getArrayOrEmpty(jsonEvent, "attendants"), new Converters.UserConverter());
+            List<UserModel> attendants = JsonArrayConverter.toList(JSONUtil.getArrayOrEmpty(jsonEvent, "attendants"), new Converters.UserConverter());
             return new EventModel(id, name, description, startDate, endDate, owner, tag, attendants);
         } catch(JSONException e) {
             Log.e("JSON PARSE", "ERROR PARSING " + jsonEvent.toString());
@@ -105,11 +105,11 @@ public class EventModel implements Serializable {
         this.endDate = endDate;
     }
 
-    public UserEntity getOwner() {
+    public String getOwner() {
         return owner;
     }
 
-    public void setOwner(UserEntity owner) {
+    public void setOwner(String owner) {
         this.owner = owner;
     }
 
@@ -121,11 +121,11 @@ public class EventModel implements Serializable {
         this.tag = tag;
     }
 
-    public List<UserEntity> getAttendants() {
+    public List<UserModel> getAttendants() {
         return attendants;
     }
 
-    public void setAttendants(List<UserEntity> attendants) {
+    public void setAttendants(List<UserModel> attendants) {
         this.attendants = attendants;
     }
 
@@ -149,7 +149,7 @@ public class EventModel implements Serializable {
             object.put("description", getDescription());
             object.put("startDate", DateConverter.toString(getStartDate(), DateConverter.DateFormat.ISO_FORMAT));
             object.put("endDate", DateConverter.toString(getEndDate(), DateConverter.DateFormat.ISO_FORMAT));
-            object.put("owner", getOwner().asJSON());
+            object.put("owner", getOwner());
             object.put("tag", getTag().getId());
         } catch (JSONException e) {
             Log.e("JSON PARSE", "Error converting object to JSON");
