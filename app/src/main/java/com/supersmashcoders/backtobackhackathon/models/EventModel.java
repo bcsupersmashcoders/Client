@@ -25,9 +25,10 @@ public class EventModel implements Serializable {
     private String owner;
     private Tag tag;
     private List<UserModel> attendants;
+    private List<ProductModel> products;
 
     private EventModel(Long id, String name, String description, Date startDate, Date endDate,
-                       String owner, Tag tag, List<UserModel> attendants) {
+                       String owner, Tag tag, List<UserModel> attendants, List<ProductModel> products) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -36,16 +37,17 @@ public class EventModel implements Serializable {
         this.owner = owner;
         this.tag = tag;
         this.attendants = attendants;
+        this.products = products;
     }
 
     public static EventModel of(Long id, String name, String description, Date startDate, Date endDate,
-                                String owner, Tag tag, List<UserModel> attendants) {
-        return new EventModel(id, name, description, startDate, endDate, owner, tag, attendants);
+                                String owner, Tag tag, List<UserModel> attendants, List<ProductModel> products) {
+        return new EventModel(id, name, description, startDate, endDate, owner, tag, attendants, products);
     }
 
     public static EventModel of(String name, String description, Date startDate, Date endDate,
                                 Tag tag) {
-        return new EventModel(0L, name, description, startDate, endDate, null, tag, new ArrayList<UserModel>());
+        return new EventModel(0L, name, description, startDate, endDate, null, tag, new ArrayList<UserModel>(), new ArrayList<ProductModel>());
     }
 
     public static EventModel of(JSONObject jsonEvent) {
@@ -58,7 +60,8 @@ public class EventModel implements Serializable {
             String owner = jsonEvent.getString("owner");
             Tag tag = Tag.fromId(jsonEvent.getString("tag"));
             List<UserModel> attendants = JsonArrayConverter.toList(JSONUtil.getArrayOrEmpty(jsonEvent, "attendants"), new Converters.UserConverter());
-            return new EventModel(id, name, description, startDate, endDate, owner, tag, attendants);
+            List<ProductModel> products = JsonArrayConverter.toList(JSONUtil.getArrayOrEmpty(jsonEvent, "products"), new Converters.ProductConverter());
+            return new EventModel(id, name, description, startDate, endDate, owner, tag, attendants, products);
         } catch(JSONException e) {
             Log.e("JSON PARSE", "ERROR PARSING " + jsonEvent.toString());
             return null;
@@ -129,19 +132,27 @@ public class EventModel implements Serializable {
         this.attendants = attendants;
     }
 
+    public List<ProductModel> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<ProductModel> products) {
+        this.products = products;
+    }
+
     /*
-    {
-  "name": "Card games on Battle City",
-  "endDate": "2015-04-15T20:20:50.520Z",
-  "description": "Playing card games on a city",
-  "startDate": "2015-04-12T20:20:50.520Z",
-  "owner":
-  {
-    "username": "username"
-  },
-  "tag": "bcsCat7000003"
-}
-     */
+        {
+      "name": "Card games on Battle City",
+      "endDate": "2015-04-15T20:20:50.520Z",
+      "description": "Playing card games on a city",
+      "startDate": "2015-04-12T20:20:50.520Z",
+      "owner":
+      {
+        "username": "username"
+      },
+      "tag": "bcsCat7000003"
+    }
+         */
     public JSONObject asJSON() {
         JSONObject object = new JSONObject();
         try {
