@@ -5,16 +5,28 @@ import android.util.Log;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.TimeZone;
 
 public class DateConverter {
-    public static Date toDate(String dateStr) {
+    public enum DateFormat {
         // "2015-04-12T20:20:50.520Z",
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        format.setTimeZone(TimeZone.getTimeZone("UTC"));
+        ISO_FORMAT(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")),
+        DATE_FORMAT(new SimpleDateFormat("yyyy-MM-dd"));
+
+        SimpleDateFormat dateFormat;
+
+        DateFormat(SimpleDateFormat dateFormat) {
+            this.dateFormat = dateFormat;
+        }
+
+        public SimpleDateFormat getDateFormat() {
+            return dateFormat;
+        }
+    }
+
+    public static Date toDate(String dateStr, DateFormat format) {
         Date date = null;
         try {
-            date = format.parse(dateStr);
+            date = format.getDateFormat().parse(dateStr);
         } catch (ParseException e) {
             Log.e("DATE ERROR", "Failed to parse date" ,e);
         }
@@ -22,7 +34,6 @@ public class DateConverter {
     }
 
     public static String toDisplayString(Date date) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        return format.format(date);
+        return DateFormat.DATE_FORMAT.getDateFormat().format(date);
     }
 }

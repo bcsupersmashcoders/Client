@@ -1,5 +1,10 @@
 package com.supersmashcoders.backtobackhackathon.models;
 
+import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 
 public class UserEntity implements Serializable {
@@ -12,8 +17,24 @@ public class UserEntity implements Serializable {
         this.username = username;
     }
 
+    public UserEntity() {
+        this.id = 1L;
+        this.username = "username";
+    }
+
     public static UserEntity of(Long id, String username) {
         return new UserEntity(id, username);
+    }
+
+    public static UserEntity of(JSONObject jsonUser) {
+        try {
+            Long id = jsonUser.getLong("id");
+            String username = jsonUser.getString("username");
+            return new UserEntity(id, username);
+        } catch (JSONException e) {
+            Log.e("JSON PARSE", "ERROR PARSING " + jsonUser.toString());
+            return null;
+        }
     }
 
     public Long getId() {

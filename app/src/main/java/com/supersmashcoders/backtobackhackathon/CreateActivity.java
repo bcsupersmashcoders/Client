@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -21,21 +22,39 @@ public class CreateActivity extends ActionBarActivity {
 
     Calendar myCalendar = Calendar.getInstance();
 
+    EditText name;
+    EditText description;
+    EditText startDate;
+    EditText endDate;
+    Spinner tagSpinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
 
-        final EditText startDate = (EditText) findViewById(R.id.input_start_date);
+        name = (EditText) findViewById(R.id.input_title);
+
+        description = (EditText) findViewById(R.id.input_description);
+
+        startDate = (EditText) findViewById(R.id.input_start_date);
         startDate.setOnClickListener(getDatePickerListener(startDate));
 
-        EditText endDate = (EditText) findViewById(R.id.input_end_date);
+        endDate = (EditText) findViewById(R.id.input_end_date);
         endDate.setOnClickListener(getDatePickerListener(endDate));
 
-        Spinner tagSpinner = (Spinner) findViewById(R.id.input_tag);
+        tagSpinner = (Spinner) findViewById(R.id.input_tag);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Tag.displayNames());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         tagSpinner.setAdapter(adapter);
+
+        Button submitButton = (Button) findViewById(R.id.button_submit);
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createEvent();
+            }
+        });
     }
 
     @Override
@@ -80,4 +99,7 @@ public class CreateActivity extends ActionBarActivity {
             editTextDisplay.setText(sdf.format(calendar.getTime()));
         }
     };
+
+    private void createEvent() {
+    }
 }
