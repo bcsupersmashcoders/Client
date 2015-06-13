@@ -75,4 +75,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:text="Attend Event"/>
+
+    <Button
+        android:id="@+id/button_images"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="View Images"/>
 </LinearLayout>

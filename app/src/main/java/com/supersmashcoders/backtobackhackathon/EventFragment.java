@@ -2,6 +2,7 @@ package com.supersmashcoders.backtobackhackathon;
 
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,8 @@ import com.supersmashcoders.backtobackhackathon.models.UserModel;
 import com.supersmashcoders.backtobackhackathon.proxy.EventProxy;
 import com.supersmashcoders.backtobackhackathon.proxy.RequestListener;
 
+import java.util.ArrayList;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,7 +31,7 @@ public class EventFragment extends Fragment {
     private static final String EVENT_ID = "com.supersmashcoders.EVENT_ID";
 
     private View mRootView;
-    private Button mButton;
+    private Button mAttendButton;
     private long mEventId;
     private EventProxy mEventProxy;
     private boolean isAttending;
@@ -73,13 +76,24 @@ public class EventFragment extends Fragment {
                 .add(R.id.map_container, mMapFragment)
                 .commit();
 
-        mButton = (Button) mRootView.findViewById(R.id.button_attend);
-        mButton .setOnClickListener(new View.OnClickListener() {
+        mAttendButton = (Button) mRootView.findViewById(R.id.button_attend);
+        mAttendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 attendEvent();
             }
         });
+
+        Button mImagesButton = (Button) mRootView.findViewById(R.id.button_images);
+        mImagesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ImageCarouselActivity.class);
+                intent.putExtra(ImageCarouselActivity.ARG_PRODUCTS, new ArrayList<>(mEvent.getProducts()));
+                startActivity(intent);
+            }
+        });
+
         return mRootView;
     }
 
@@ -149,9 +163,9 @@ public class EventFragment extends Fragment {
 
     private void updateButton() {
         if (isAttending) {
-            mButton.setText("Stop Attending");
+            mAttendButton.setText("Stop Attending");
         } else {
-            mButton.setText("Attend");
+            mAttendButton.setText("Attend");
         }
     }
 }

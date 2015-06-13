@@ -15,20 +15,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.supersmashcoders.backtobackhackathon.models.ProductModel;
+import com.supersmashcoders.backtobackhackathon.proxy.ImageProxy;
+
+import java.util.List;
 
 
 public class ImageCarouselActivity extends FragmentActivity {
+    public static final String ARG_PRODUCTS = "com.bcsupersmashcoders.PRODUCTS";
+
     ImagesPagerAdapter mDemoCollectionPagerAdapter;
     ViewPager mViewPager;
-    ProductModel[] products = new ProductModel[] {
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_carousel);
 
-        mDemoCollectionPagerAdapter = new ImagesPagerAdapter(getSupportFragmentManager());
+        List<ProductModel> products = (List<ProductModel>) getIntent().getSerializableExtra(ARG_PRODUCTS);
+        mDemoCollectionPagerAdapter = new ImagesPagerAdapter(getSupportFragmentManager(), products);
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mDemoCollectionPagerAdapter);
     }
@@ -44,37 +48,44 @@ public class ImageCarouselActivity extends FragmentActivity {
     }
 
     public class ImagesPagerAdapter extends FragmentStatePagerAdapter {
-        public ImagesPagerAdapter(FragmentManager fm) {
+        List<ProductModel> products;
+
+        public ImagesPagerAdapter(FragmentManager fm, List<ProductModel> products) {
             super(fm);
+            this.products = products;
         }
 
         @Override
         public Fragment getItem(int i) {
-            Fragment fragment = new DemoObjectFragment();
+            Fragment fragment = new ImageFragment();
             Bundle args = new Bundle();
             // Our object is just an integer :-P
-            args.putInt(DemoObjectFragment.ARG_OBJECT, i + 1);
+            args.putInt(ImageFragment.ARG_OBJECT, i + 1);
+            args.putString(ImageFragment.ARG_IMAGE_URL, products.get(i).getPhotoUrl());
             fragment.setArguments(args);
             return fragment;
         }
 
         @Override
         public int getCount() {
-            return 100;
+            return products.size();
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return "OBJECT " + (position + 1);
+            return products.get(position).getName();
         }
     }
 
-    public static class DemoObjectFragment extends Fragment {
+    public static class ImageFragment extends Fragment {
         public static final String ARG_OBJECT = "object";
+        public static final String ARG_IMAGE_URL = "image_url";
+        private ImageProxy imageProxy;
 
         @Override
         public View onCreateView(LayoutInflater inflater,
                                  ViewGroup container, Bundle savedInstanceState) {
+            imageProxy = new ImageProxy();
             // The last two arguments ensure LayoutParams are inflated
             // properly.
             View rootView = inflater.inflate(
@@ -83,7 +94,9 @@ public class ImageCarouselActivity extends FragmentActivity {
             ((TextView) rootView.findViewById(android.R.id.text1)).setText(
                     Integer.toString(args.getInt(ARG_OBJECT)));
 
+            String url =  "http://www.backcountry.com" + args.getString(ARG_IMAGE_URL);
             ImageView imageView = (ImageView) rootView.findViewById(R.id.image);
+            imageProxy.getURLImage(getActivity(), url, imageView);
             return rootView;
         }
     }
