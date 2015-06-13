@@ -29,10 +29,10 @@ public class EventAdapter extends ArrayAdapter<EventModel>{
         TextView itemDescription = (TextView) convertView.findViewById(R.id.item_description);
         TextView itemDate = (TextView) convertView.findViewById(R.id.item_start_date);
 
-        EventModel jsonObject = getItem(position);
-        itemName.setText(String.valueOf(jsonObject.getName()));
-        itemDescription.setText(jsonObject.getDescription());
-        itemDate.setText(DateConverter.toDisplayString(jsonObject.getStartDate()));
+        EventModel event = getItem(position);
+        itemName.setText(String.valueOf(event.getName()));
+        itemDescription.setText(event.getDescription());
+        itemDate.setText(DateConverter.toDisplayString(event.getStartDate()));
 
         return convertView;
     }
