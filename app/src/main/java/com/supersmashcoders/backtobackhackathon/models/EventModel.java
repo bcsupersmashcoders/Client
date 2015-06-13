@@ -128,4 +128,32 @@ public class EventModel implements Serializable {
     public void setAttendants(List<UserEntity> attendants) {
         this.attendants = attendants;
     }
+
+    /*
+    {
+  "name": "Card games on Battle City",
+  "endDate": "2015-04-15T20:20:50.520Z",
+  "description": "Playing card games on a city",
+  "startDate": "2015-04-12T20:20:50.520Z",
+  "owner":
+  {
+    "username": "username"
+  },
+  "tag": "bcsCat7000003"
+}
+     */
+    public JSONObject asJSON() {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("name", getName());
+            object.put("description", getDescription());
+            object.put("startDate", DateConverter.toString(getStartDate(), DateConverter.DateFormat.ISO_FORMAT));
+            object.put("endDate", DateConverter.toString(getEndDate(), DateConverter.DateFormat.ISO_FORMAT));
+            object.put("owner", getOwner().asJSON());
+            object.put("tag", getTag().getId());
+        } catch (JSONException e) {
+            Log.e("JSON PARSE", "Error converting object to JSON");
+        }
+        return object;
+    }
 }

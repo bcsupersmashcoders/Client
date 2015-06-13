@@ -33,7 +33,7 @@ public class DateConverter {
         return date;
     }
 
-    public static String toDisplayString(Date date) {
-        return DateFormat.DATE_FORMAT.getDateFormat().format(date);
+    public static String toString(Date date, DateFormat dateFormat) {
+        return dateFormat.getDateFormat().format(date);
     }
 }

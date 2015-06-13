@@ -3,10 +3,12 @@ package com.supersmashcoders.backtobackhackathon.proxy;
 import android.content.Context;
 import android.util.Log;
 
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.supersmashcoders.backtobackhackathon.models.EventModel;
+import com.supersmashcoders.backtobackhackathon.models.UserEntity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,13 +18,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EventProxy {
-    public void getEvents(final Context context, final RequestListener<List<EventModel>> listener) {
+    public void getAll(final Context context, final RequestListener<List<EventModel>> listener) {
         final String url = "https://backtoback-01.appspot.com/_ah/api/backtoback/v1/events";
 
         // Request a string response from the provided URL.
         JsonObjectRequest eventsRequest = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                if(!response.has("items")) {
+                    listener.onComplete(new ArrayList<EventModel>());
+                    return;
+                }
                 try {
                     JSONArray events = response.getJSONArray("items");
                     List<EventModel> eventModelList = new ArrayList<>(events.length());
@@ -44,8 +50,7 @@ public class EventProxy {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("API FAIL", "Error calling API " + url);
-                Log.e("API FAIL", error.getMessage());
+                Log.e("API FAIL", "Error calling API " + url, error);
                 listener.onError();
             }
         });
@@ -54,7 +59,7 @@ public class EventProxy {
         ApplicationRequestQueue.INSTANCE.addToRequestQueue(context, eventsRequest);
     }
 
-    public void getEvent(final Context context, long id, final RequestListener<EventModel> listener) {
+    public void get(final Context context, long id, final RequestListener<EventModel> listener) {
         final String url = "https://backtoback-01.appspot.com/_ah/api/backtoback/v1/event/" + id;
 
         // Request a string response from the provided URL.
@@ -68,7 +73,30 @@ public class EventProxy {
             @Override
             public void onErrorResponse(VolleyError error) {
                 listener.onError();
-                Log.e("API FAIL", "Error calling API " + url);
+                Log.e("API FAIL", "Error calling API " + url, error);
+            }
+        });
+
+        // Add the request to the RequestQueue.
+        ApplicationRequestQueue.INSTANCE.addToRequestQueue(context, eventRequest);
+    }
+
+    public void create(final Context context, EventModel newEvent, final RequestListener<EventModel> listener) {
+        final String url = "https://backtoback-01.appspot.com/_ah/api/backtoback/v1/event";
+        newEvent.setOwner(UserEntity.of(1L, "username"));
+
+        // Request a string response from the provided URL.
+        JsonObjectRequest eventRequest = new JsonObjectRequest(Request.Method.POST, url, newEvent.asJSON(), new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                EventModel eventModel = EventModel.of(response);
+                listener.onComplete(eventModel);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                listener.onError();
+                Log.e("API FAIL", "Error calling API " + url, error);
             }
         });
 

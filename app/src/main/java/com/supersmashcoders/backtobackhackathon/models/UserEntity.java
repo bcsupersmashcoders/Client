@@ -47,4 +47,14 @@ public class UserEntity implements Serializable {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    public JSONObject asJSON() {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("username", getUsername());
+        } catch (JSONException e) {
+            Log.e("JSON PARSE", "Error converting object to JSON");
+        }
+        return object;
+    }
 }
