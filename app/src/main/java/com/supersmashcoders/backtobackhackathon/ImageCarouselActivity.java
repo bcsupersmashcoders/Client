@@ -11,47 +11,40 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.supersmashcoders.backtobackhackathon.models.ProductModel;
 
 
 public class ImageCarouselActivity extends FragmentActivity {
-    DemoCollectionPagerAdapter mDemoCollectionPagerAdapter;
+    ImagesPagerAdapter mDemoCollectionPagerAdapter;
     ViewPager mViewPager;
+    ProductModel[] products = new ProductModel[] {
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_carousel);
 
-        mDemoCollectionPagerAdapter = new DemoCollectionPagerAdapter(getSupportFragmentManager());
+        mDemoCollectionPagerAdapter = new ImagesPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mDemoCollectionPagerAdapter);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_image_carousel, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
-    public class DemoCollectionPagerAdapter extends FragmentStatePagerAdapter {
-        public DemoCollectionPagerAdapter(FragmentManager fm) {
+    public class ImagesPagerAdapter extends FragmentStatePagerAdapter {
+        public ImagesPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -85,10 +78,12 @@ public class ImageCarouselActivity extends FragmentActivity {
             // The last two arguments ensure LayoutParams are inflated
             // properly.
             View rootView = inflater.inflate(
-                    R.layout.fragment_collection_object, container, false);
+                    R.layout.image_item, container, false);
             Bundle args = getArguments();
             ((TextView) rootView.findViewById(android.R.id.text1)).setText(
                     Integer.toString(args.getInt(ARG_OBJECT)));
+
+            ImageView imageView = (ImageView) rootView.findViewById(R.id.image);
             return rootView;
         }
     }

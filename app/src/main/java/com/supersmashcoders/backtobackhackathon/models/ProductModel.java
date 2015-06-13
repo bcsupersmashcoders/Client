@@ -22,8 +22,8 @@ public class ProductModel {
         try {
             String id = jsonEvent.getString("id");
             String name = jsonEvent.getString("name");
-            String productUrl = jsonEvent.getString("productUrl");
-            String photoUrl = jsonEvent.getString("photoUrl");
+            String productUrl = jsonEvent.getString("productURL");
+            String photoUrl = jsonEvent.getString("photoURL");
             return new ProductModel(id, name, productUrl, photoUrl);
         } catch(JSONException e) {
             Log.e("JSON PARSE", "ERROR PARSING " + jsonEvent.toString());
