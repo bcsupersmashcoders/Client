@@ -5,11 +5,10 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
-import android.content.ContentResolver;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 
@@ -29,13 +28,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
+import com.supersmashcoders.backtobackhackathon.global.UserHandler;
 import com.supersmashcoders.backtobackhackathon.models.UserModel;
 import com.supersmashcoders.backtobackhackathon.proxy.ImageProxy;
 import com.supersmashcoders.backtobackhackathon.proxy.RequestListener;
@@ -159,7 +152,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask = new UserLoginTask(email, password, this);
             mAuthTask.execute((Void) null);
         }
     }
@@ -272,10 +265,12 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         private final String mEmail;
         private final String mPassword;
+        private LoginActivity caller;
 
-        UserLoginTask(String email, String password) {
+        UserLoginTask(String email, String password, LoginActivity caller) {
             mEmail = email;
             mPassword = password;
+            this.caller = caller;
         }
 
         @Override
@@ -284,7 +279,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
             UserProxy userProxy = new UserProxy();
             Boolean result = false;
-            final UserModel user = UserModel.of((long) 0, null);
+            final UserModel user = UserModel.of((long) -1, null);
 
             try {
 
@@ -305,6 +300,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 Thread.sleep(2000);
                 if (user.getId() != -1){
                     result = true;
+                    UserHandler.setUser(user);
                 }
 
             }
@@ -339,7 +335,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             showProgress(false);
 
             if (success) {
-                finish();
+                //finish();
+                Intent createIntent = new Intent(this.caller, MainActivity.class);
+                startActivity(createIntent);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
