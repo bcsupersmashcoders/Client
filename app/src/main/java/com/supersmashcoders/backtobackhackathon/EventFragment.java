@@ -85,7 +85,7 @@ public class EventFragment extends Fragment {
 
     public void checkIfAttending() {
         for (UserModel user : mEvent.getAttendants()) {
-            if (user.getUsername().equals(UserHandler.getUser())) {
+            if (user.getUsername().equals(UserHandler.getUsername())) {
                 isAttending = true;
             }
         }

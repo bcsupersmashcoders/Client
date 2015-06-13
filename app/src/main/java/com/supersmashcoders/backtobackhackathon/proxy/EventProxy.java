@@ -95,7 +95,7 @@ public class EventProxy {
 
     public void create(final Context context, EventModel newEvent, final RequestListener<EventModel> listener) {
         final String url = "https://backtoback-01.appspot.com/_ah/api/backtoback/v1/event";
-        newEvent.setOwner(UserHandler.getUser());
+        newEvent.setOwner(UserHandler.getUsername());
 
         // Request a string response from the provided URL.
         JsonObjectRequest eventRequest = new JsonObjectRequest(Request.Method.POST, url, newEvent.asJSON(), new Response.Listener<JSONObject>() {
@@ -119,7 +119,7 @@ public class EventProxy {
     public void attend(final Context context, Long id, final RequestListener<EventModel> listener) {
         final String url = String.format("https://backtoback-01.appspot.com/_ah/api/backtoback/v1/events/attendants?eventId=%1$s&userId=%2$s",
                 id,
-                UserHandler.getUser());
+                UserHandler.getUsername());
 
         // Request a string response from the provided URL.
         JsonObjectRequest eventRequest = new JsonObjectRequest(Request.Method.PUT, url, null, new Response.Listener<JSONObject>() {
@@ -142,7 +142,7 @@ public class EventProxy {
     public void removeAttendance(final Context context, Long id, final RequestListener<EventModel> listener) {
         final String url = String.format("https://backtoback-01.appspot.com/_ah/api/backtoback/v1/events/attendants?eventId=%1$s&username=%2$s",
                 id,
-                UserHandler.getUser());
+                UserHandler.getUsername());
 
         // Request a string response from the provided URL.
         JsonObjectRequest eventRequest = new JsonObjectRequest(Request.Method.DELETE, url, null, new Response.Listener<JSONObject>() {
