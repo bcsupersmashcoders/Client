@@ -297,7 +297,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                     }
                 });
 
-                Thread.sleep(2000);
+                Thread.sleep(2500);
                 if (user.getId() != -1){
                     result = true;
                     UserHandler.setUser(user);
