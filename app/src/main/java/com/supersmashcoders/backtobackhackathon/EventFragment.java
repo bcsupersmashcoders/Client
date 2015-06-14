@@ -15,7 +15,6 @@ import com.google.android.gms.maps.MapFragment;
 import com.supersmashcoders.backtobackhackathon.converters.DateConverter;
 import com.supersmashcoders.backtobackhackathon.global.UserHandler;
 import com.supersmashcoders.backtobackhackathon.models.EventModel;
-import com.supersmashcoders.backtobackhackathon.models.UserModel;
 import com.supersmashcoders.backtobackhackathon.proxy.EventProxy;
 import com.supersmashcoders.backtobackhackathon.proxy.RequestListener;
 
@@ -98,11 +97,13 @@ public class EventFragment extends Fragment {
     }
 
     public void checkIfAttending() {
-        for (UserModel user : mEvent.getAttendants()) {
-            if (user.getUsername().equals(UserHandler.getUsername())) {
+        for (String user : mEvent.getAttendants()) {
+            if (user.equals(UserHandler.getUsername())) {
                 isAttending = true;
+                return;
             }
         }
+        isAttending = false;
     }
 
     @Override
@@ -124,6 +125,9 @@ public class EventFragment extends Fragment {
                 startDate.setText(DateConverter.toString(mEvent.getStartDate(), DateConverter.DateFormat.DATE_FORMAT));
                 endDate.setText(DateConverter.toString(mEvent.getEndDate(), DateConverter.DateFormat.DATE_FORMAT));
                 tags.setText(mEvent.getTag().getDisplayName());
+
+                checkIfAttending();
+                updateButton();
             }
 
             @Override

@@ -42,11 +42,11 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public void onNavigationDrawerItemSelected(int position) {
+    public void onNavigationDrawerItemSelected(EventRequestType type) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, EventsFragment.newInstance(EventRequestType.ALL_EVENTS.name()))
+                .replace(R.id.container, EventsFragment.newInstance(type.name()))
                         .commit();
     }
 

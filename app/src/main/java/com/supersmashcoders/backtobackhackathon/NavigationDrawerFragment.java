@@ -28,6 +28,7 @@ import com.supersmashcoders.backtobackhackathon.enums.EventRequestType;
  */
 public class NavigationDrawerFragment extends Fragment {
 
+    String[] names = EventRequestType.displayNames();
     /**
      * Remember the position of the selected item.
      */
@@ -100,7 +101,7 @@ public class NavigationDrawerFragment extends Fragment {
                 getActionBar().getThemedContext(),
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
-                EventRequestType.displayNames()));
+                names));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
     }
@@ -192,7 +193,8 @@ public class NavigationDrawerFragment extends Fragment {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
         }
         if (mCallbacks != null) {
-            mCallbacks.onNavigationDrawerItemSelected(position);
+            String typeName = names[position];
+            mCallbacks.onNavigationDrawerItemSelected(EventRequestType.fromDisplayName(typeName));
         }
     }
 
@@ -256,6 +258,6 @@ public class NavigationDrawerFragment extends Fragment {
         /**
          * Called when an item in the navigation drawer is selected.
          */
-        void onNavigationDrawerItemSelected(int position);
+        void onNavigationDrawerItemSelected(EventRequestType type);
     }
 }

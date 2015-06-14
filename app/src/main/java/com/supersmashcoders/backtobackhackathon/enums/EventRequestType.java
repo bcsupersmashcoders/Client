@@ -32,4 +32,14 @@ public enum EventRequestType {
 
         return names;
     }
+
+    public static EventRequestType fromDisplayName(String name) {
+        EventRequestType tag = null;
+        for (EventRequestType currentTag: values()) {
+            if (currentTag.getDisplayName().equals(name)) {
+                return currentTag;
+            }
+        }
+        throw new IllegalArgumentException("Invalid tag name provided: " + name);
+    }
 }

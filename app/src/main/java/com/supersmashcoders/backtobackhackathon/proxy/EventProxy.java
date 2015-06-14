@@ -26,10 +26,10 @@ public class EventProxy {
                 url = "https://backtoback-01.appspot.com/_ah/api/backtoback/v1/events";
                 break;
             case MY_CREATED_EVENTS:
-                url = "https://backtoback-01.appspot.com/_ah/api/backtoback/v1/events";
+                url = "https://backtoback-01.appspot.com/_ah/api/backtoback/v1/users//events/created?username=" + UserHandler.getUsername();
                 break;
             case MY_SUBSCRIBED_EVENTS:
-                url = "https://backtoback-01.appspot.com/_ah/api/backtoback/v1/events";
+                url = "https://backtoback-01.appspot.com/_ah/api/backtoback/v1/users/events/attended?username=" + UserHandler.getUsername();
                 break;
         }
 
