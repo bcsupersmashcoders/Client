@@ -23,13 +23,16 @@ public class EventProxy {
         String url = null;
         switch(type) {
             case ALL_EVENTS:
-                url = "https://backtoback-01.appspot.com/_ah/api/backtoback/v1/events";
+                //url = "https://backtoback-01.appspot.com/_ah/api/backtoback/v1/events";
+                url = "http://10.50.31.146:8181/_ah/api/backtoback/v1/events";
                 break;
             case MY_CREATED_EVENTS:
-                url = "https://backtoback-01.appspot.com/_ah/api/backtoback/v1/events";
+                //url = "https://backtoback-01.appspot.com/_ah/api/backtoback/v1/events";
+                url = "http://10.50.31.146:8181/_ah/api/backtoback/v1/events";
                 break;
             case MY_SUBSCRIBED_EVENTS:
-                url = "https://backtoback-01.appspot.com/_ah/api/backtoback/v1/events";
+                //url = "https://backtoback-01.appspot.com/_ah/api/backtoback/v1/events";
+                url = "http://10.50.31.146:8181/_ah/api/backtoback/v1/events";
                 break;
         }
 
@@ -72,7 +75,8 @@ public class EventProxy {
     }
 
     public void get(final Context context, long id, final RequestListener<EventModel> listener) {
-        final String url = "https://backtoback-01.appspot.com/_ah/api/backtoback/v1/event/" + id;
+        //final String url = "https://backtoback-01.appspot.com/_ah/api/backtoback/v1/event/" + id;
+        final String url = "http://10.50.31.146:8181/_ah/api/backtoback/v1/event" + id;
 
         // Request a string response from the provided URL.
         JsonObjectRequest eventRequest = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
@@ -94,7 +98,8 @@ public class EventProxy {
     }
 
     public void create(final Context context, EventModel newEvent, final RequestListener<EventModel> listener) {
-        final String url = "https://backtoback-01.appspot.com/_ah/api/backtoback/v1/event";
+        //final String url = "https://backtoback-01.appspot.com/_ah/api/backtoback/v1/event";
+        final String url = "http://10.50.31.146:8181/_ah/api/backtoback/v1/event";
         newEvent.setOwner(UserHandler.getUsername());
 
         // Request a string response from the provided URL.
@@ -117,9 +122,13 @@ public class EventProxy {
     }
 
     public void attend(final Context context, Long id, final RequestListener<EventModel> listener) {
-        final String url = String.format("https://backtoback-01.appspot.com/_ah/api/backtoback/v1/events/attendants?eventId=%1$s&username=%2$s",
+        //final String url = String.format("https://backtoback-01.appspot.com/_ah/api/backtoback/v1/events/attendants?eventId=%1$s&username=%2$s",
+        //        id,
+        //        UserHandler.getUsername());
+        final String url = String.format("http://10.50.31.146:8181/_ah/api/backtoback/v1/events/attendants?eventId=%1$s&username=%2$s",
                 id,
                 UserHandler.getUsername());
+
 
         // Request a string response from the provided URL.
         JsonObjectRequest eventRequest = new JsonObjectRequest(Request.Method.PUT, url, null, new Response.Listener<JSONObject>() {
@@ -140,10 +149,12 @@ public class EventProxy {
     }
 
     public void removeAttendance(final Context context, Long id, final RequestListener<EventModel> listener) {
-        final String url = String.format("https://backtoback-01.appspot.com/_ah/api/backtoback/v1/events/attendants?eventId=%1$s&username=%2$s",
+        //final String url = String.format("https://backtoback-01.appspot.com/_ah/api/backtoback/v1/events/attendants?eventId=%1$s&username=%2$s",
+         //       id,
+         //       UserHandler.getUsername());
+        final String url = String.format("http://10.50.31.146:8181/_ah/api/backtoback/v1/events/attendants?eventId=%1$s&username=%2$s",
                 id,
                 UserHandler.getUsername());
-
         // Request a string response from the provided URL.
         JsonObjectRequest eventRequest = new JsonObjectRequest(Request.Method.DELETE, url, null, new Response.Listener<JSONObject>() {
             @Override
