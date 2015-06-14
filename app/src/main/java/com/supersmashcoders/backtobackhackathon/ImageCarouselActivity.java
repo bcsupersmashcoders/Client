@@ -60,7 +60,7 @@ public class ImageCarouselActivity extends FragmentActivity {
             Fragment fragment = new ImageFragment();
             Bundle args = new Bundle();
             // Our object is just an integer :-P
-            args.putInt(ImageFragment.ARG_OBJECT, i + 1);
+            args.putString(ImageFragment.ARG_OBJECT, products.get(i).getName());
             args.putString(ImageFragment.ARG_IMAGE_URL, products.get(i).getPhotoUrl());
             fragment.setArguments(args);
             return fragment;
@@ -91,8 +91,7 @@ public class ImageCarouselActivity extends FragmentActivity {
             View rootView = inflater.inflate(
                     R.layout.image_item, container, false);
             Bundle args = getArguments();
-            ((TextView) rootView.findViewById(android.R.id.text1)).setText(
-                    Integer.toString(args.getInt(ARG_OBJECT)));
+            ((TextView) rootView.findViewById(android.R.id.text1)).setText(args.getString(ARG_OBJECT));
 
             String url =  "http://www.backcountry.com" + args.getString(ARG_IMAGE_URL);
             ImageView imageView = (ImageView) rootView.findViewById(R.id.image);
