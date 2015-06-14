@@ -29,7 +29,7 @@ public class EventProxy {
                 url = "http://10.50.31.146:8181/_ah/api/backtoback/v1/users//events/created?username=" + UserHandler.getUsername();
                 break;
             case MY_SUBSCRIBED_EVENTS:
-                url = "http://10.50.31.146:8181/_ah/api/backtoback/v1/users//events/attended?username=" + UserHandler.getUsername();
+                url = "http://10.50.31.146:8181/_ah/api/backtoback/v1/users/events/attended?username=" + UserHandler.getUsername();
                 break;
         }
 
